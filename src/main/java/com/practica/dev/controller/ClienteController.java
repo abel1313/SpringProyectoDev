@@ -174,7 +174,7 @@ public class ClienteController extends BaseControllerImpl<Cliente, IClienteServi
 				respuesta.setCode("200 OK");
 				respuesta.setCodeValue(200);
 				respuesta.setMensaje("Datos del cliente para editar");
-				Optional<Cliente> listaCliente = !this.iClienteService.getOne(id).isEmpty() ? this.iClienteService.getOne(id) : Optional.empty() ;
+				Optional<Cliente> listaCliente = !this.iClienteService.getOne(id).isPresent() ? this.iClienteService.getOne(id) : Optional.empty() ;
 				respuesta.setT(listaCliente);
 		
 				 return ResponseEntity.status(HttpStatus.OK).body(respuesta);

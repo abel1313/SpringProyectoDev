@@ -191,7 +191,9 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
 						}
 					}
 					
-					Usuario usuarioStream =  usuarioOptional.stream().map(m->m).findFirst().get();
+					Usuario usuarioStream =  
+							usuarioOptional.map(m->m).get();
+					
 					ClienteUsuario cliUsu = new ClienteUsuario();
 					cliUsu.setUsuario(usuarioStream);
 					this.iClienteUsuarioService.save(cliUsu);
