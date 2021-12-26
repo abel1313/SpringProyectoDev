@@ -69,8 +69,6 @@
 
 		</dependency>
 
-
-
 	</dependencies>
 
 	<build>
@@ -87,18 +85,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<release>8</release>
-					<verbose>true</verbose>
-				</configuration>
-			</plugin>
-
 
 		</plugins>
 	</build>
