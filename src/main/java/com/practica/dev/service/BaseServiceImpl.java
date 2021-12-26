@@ -1,9 +1,13 @@
 package com.practica.dev.service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.practica.dev.dto.RespuestaDTO;
 import com.practica.dev.model.Base;
 import com.practica.dev.model.Persona;
 import com.practica.dev.repository.IBaseRepository;
@@ -70,8 +74,112 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 			throw new Exception(e.getMessage());
 		}
 	}
-	
-	
-	
+
+	@Override
+	public Optional<E> getOne(ID id) throws Exception {
+		try {
+			return this.iBaseRepository.existsById(id) ? this.iBaseRepository.findById(id) : Optional.empty();
+
+		}catch(Exception e)
+		{
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	@Override
+	public RespuestaDTO<E> saveE(E e) throws Exception {
+		RespuestaDTO<E> respuesta = new RespuestaDTO<>();
+		
+		if( e != null )
+		{
+			try {
+				respuesta.setCode("200 OK");
+				respuesta.setCodeValue(200);
+				respuesta.setMensaje("Se creo correctamente");
+				respuesta.setT(this.iBaseRepository.save(e));
+				return respuesta;
+			}catch(Exception exception)
+			{
+//				throw new Exception(e.getMessage());
+				
+				respuesta.setCode("200 OK");
+				respuesta.setCodeValue(500);
+				respuesta.setMensaje("Ocurrio un error ");
+				return respuesta;
+				
+			}
+		}
+		respuesta.setCode("200 OK");
+		respuesta.setCodeValue(200);
+		respuesta.setMensaje("Verificar la información");
+		respuesta.setT(e);
+		return respuesta;
+	}
+
+	@Override
+	public RespuestaDTO<List<E>> getAllE() throws Exception {
+		
+		RespuestaDTO<List<E>> respuesta = new RespuestaDTO<>();
+		
+		try {
+			List<E> lista =  this.iBaseRepository.findAll();
+			if( !lista.isEmpty())
+			{
+				respuesta.setCode("200 OK");
+				respuesta.setCodeValue(200);
+				respuesta.setMensaje("Se encontraron datos en la base de datos");
+				respuesta.setT(this.iBaseRepository.findAll());
+				return respuesta;
+			}
+			
+		}catch(Exception exception)
+		{
+//			throw new Exception(e.getMessage());
+			
+			respuesta.setCode("200 OK");
+			respuesta.setCodeValue(500);
+			respuesta.setMensaje("Ocurrio un error ");
+			return null;
+			
+		}
+		respuesta.setCode("200 OK");
+		respuesta.setCodeValue(200);
+		respuesta.setMensaje("No se encontraron datos en la base de datos");
+		respuesta.setT(new ArrayList<>());
+		return respuesta;
+	}
+
+	@Override
+	public RespuestaDTO<Optional<E>> obtenerPost(@PathVariable ID id) throws Exception {
+
+			RespuestaDTO<Optional<E>> respuesta = new RespuestaDTO<>();
+			
+			if( id != null )
+			{
+				try {
+					respuesta.setCode("200 OK");
+					respuesta.setCodeValue(200);
+					respuesta.setMensaje("Datos encontrados");
+					respuesta.setT(this.iBaseRepository.findById(id));
+					return respuesta;
+				}catch(Exception exception)
+				{
+//					throw new Exception(e.getMessage());
+					
+					respuesta.setCode("200 OK");
+					respuesta.setCodeValue(500);
+					respuesta.setMensaje("Ocurrio un error ");
+					respuesta.setT(Optional.empty());
+					return respuesta;
+					
+				}
+			}
+			respuesta.setCode("200 OK");
+			respuesta.setCodeValue(200);
+			respuesta.setMensaje("Verificar la información");
+			respuesta.setT(Optional.empty());
+			return respuesta;
+		}
+
 	
 }

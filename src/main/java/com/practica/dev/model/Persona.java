@@ -36,7 +36,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
 @Table( name = "persona")
 public class Persona extends Base{
 	
@@ -53,17 +52,17 @@ public class Persona extends Base{
 	
 	@Column( name = "apeido_Paterno_Persona")
 	@NotNull( message = "El apeido paterno no deberia ser vacio")
-	@Size( min = 5, max = 25)
+	@Size( min = 3, max = 25)
 	private String apeidoPaternoPersona;
 	
 	@Column( name = "apeido_Materno_Persona")
 	@NotNull( message = "El apeido materno no deberia ser vacio")
-	@Size( min = 5, max = 25)
+	@Size( min = 3, max = 25)
 	private String apeidoMaternoPersona;
 	
 	@Column( name = "genero_Persona")
 	@NotNull( message = "El genero no deberia ser vacio")
-	@Size( min = 5, max = 25)
+	@Size( min = 3, max = 10)
 	private String generoPersona;
 	
 

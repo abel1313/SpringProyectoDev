@@ -12,7 +12,7 @@ public class PersonaServiceImpl extends BaseServiceImpl<Persona, Integer>
 implements IPersonaService
 {
 	@Autowired
-	private IPersonaRepository iPeRepository;
+	private IPersonaRepository iPersonaRepository;
 	
 	public PersonaServiceImpl(IBaseRepository<Persona, Integer> iBaseRepository) {
 		super(iBaseRepository);
