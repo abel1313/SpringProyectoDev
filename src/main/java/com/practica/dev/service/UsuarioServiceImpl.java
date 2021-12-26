@@ -233,12 +233,7 @@ public class UsuarioServiceImpl extends BaseServiceImpl<Usuario, Integer> implem
 			if (!usuarios.isEmpty()) {
 				List<InicioSesionDTO> listDTO = new ArrayList<InicioSesionDTO>();
 				usuarios.forEach((usu) -> {
-					Stream<String> oermisos = usu.getPermisos().stream().map((Permisos permiso) -> {
-						return permiso.getVista().getNombreVista() + " ";
-					});
-
-					List<String> string = oermisos.toList();
-
+	
 					InicioSesionDTO inicioSesionDTO = new InicioSesionDTO();
 					inicioSesionDTO.setId(usu.getId());
 					inicioSesionDTO.setNombreUsuario(usu.getNombreUsuario());
