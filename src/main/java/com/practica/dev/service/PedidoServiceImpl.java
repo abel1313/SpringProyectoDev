@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,10 @@ public class PedidoServiceImpl extends BaseServiceImpl<Pedido, Integer> implemen
 
 	@Autowired
 	private IPedidoRepository iPedidoRepository;
-	
+
 	@Autowired
 	private IVentaRepository iVentaRepository;
-	
+
 	@Autowired
 	private IDetalleRepository iDetalleRepository;
 
@@ -47,7 +48,8 @@ public class PedidoServiceImpl extends BaseServiceImpl<Pedido, Integer> implemen
 
 		try {
 
-			List<Pedido> us = this.iPedidoRepository.findAll();
+			List<Pedido> us = this.iPedidoRepository.findByEstatusPedido("En camino");
+		
 
 			if (!us.isEmpty()) {
 
@@ -63,6 +65,12 @@ public class PedidoServiceImpl extends BaseServiceImpl<Pedido, Integer> implemen
 					inicio.setPermisos(u.getPermisos());
 					enviarDTO.setUsuario(inicio);
 					enviarDTO.setVenta(pedido.getVenta());
+					List<DetalleVenta> det= this.iDetalleRepository.findByVentaId(pedido.getVenta().getId());
+					Double tot = det.stream()
+							.filter( f -> pedido.getVenta().getId() == f.getVenta().getId() ).mapToDouble(m-> m.getKilosDetalle()).sum();
+							System.err.println(tot + " tolal -------------------------------------");
+					enviarDTO.setTotalKilos(tot);
+
 					return enviarDTO;
 				}).collect(Collectors.toList());
 
@@ -97,55 +105,53 @@ public class PedidoServiceImpl extends BaseServiceImpl<Pedido, Integer> implemen
 	public RespuestaDTO<Optional<MensajeDTO>> guardarPedido(VentaDetalleDTO ventaDetalleDTO) throws Exception {
 		RespuestaDTO<Optional<MensajeDTO>> res = new RespuestaDTO<>();
 		try {
-				System.err.println(ventaDetalleDTO.getProducto().size() + "  tamano");
-			if( ventaDetalleDTO != null )
-			{
-				Venta venta =  this.iVentaRepository.save(ventaDetalleDTO.getVenta());
-						
-				ventaDetalleDTO.getProducto().forEach((producto)->{
+			System.err.println(ventaDetalleDTO.getProducto().size() + "  tamano");
+			if (ventaDetalleDTO != null) {
+				Venta venta = this.iVentaRepository.save(ventaDetalleDTO.getVenta());
+
+				ventaDetalleDTO.getProducto().forEach((producto) -> {
 
 					DetalleVenta detalle = new DetalleVenta();
 					detalle.setVenta(venta);
-					detalle.setKilosDetalle(Double.parseDouble(producto.getKiloProducto()) );
+					detalle.setKilosDetalle(Double.parseDouble(producto.getKiloProducto()));
 					detalle.setPrecioDetalle(producto.getPrecioProducto());
 					detalle.setProducto(producto);
-					detalle.setSubtotalDetalle( (producto.getPrecioProducto() * Double.parseDouble(producto.getKiloProducto()) ) );
+					detalle.setSubtotalDetalle(
+							(producto.getPrecioProducto() * Double.parseDouble(producto.getKiloProducto())));
 					DetalleVenta det = this.iDetalleRepository.save(detalle);
-					
+
 				});
 				List<DetalleVenta> list = this.iDetalleRepository.findByVentaId(venta.getId());
-				double totalVenta = list.stream()
-						.filter((total)-> total.getVenta().getId() == venta.getId() )
-						.mapToDouble((sub)-> sub.getSubtotalDetalle())
-						.sum();
+				double totalVenta = list.stream().filter((total) -> total.getVenta().getId() == venta.getId())
+						.mapToDouble((sub) -> sub.getSubtotalDetalle()).sum();
 				venta.setTotalVenta(totalVenta);
-				Venta ventaTotal =  this.iVentaRepository.save(venta);
+				Venta ventaTotal = this.iVentaRepository.save(venta);
 				Pedido pedido = new Pedido();
-				  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 				pedido.setFechaPedido(dtf.format(LocalDateTime.now()));
 				pedido.setUsuario(venta.getUsuario());
 				pedido.setEstatusPedido("En camino");
 				pedido.setVenta(ventaTotal);
 				Pedido pedidoGuardado = this.iPedidoRepository.save(pedido);
-				
+
 				res.setCode("200 OK");
 				res.setCodeValue(200);
 				res.setMensaje("Pedido realizado");
 				res.setT(Optional.of(new MensajeDTO("Se realizó correctamente el pedido")));
-	
+
 			}
-				
+
 		} catch (Exception e) {
 //				throw new Exception(e.getMessage());
 
 			System.err.println(" nada mas " + e.getMessage());
-			
+
 			res.setCode("200 OK");
 			res.setCodeValue(500);
 			res.setMensaje("Errar del lado de servidor");
 			res.setT(Optional.of(new MensajeDTO("Los datos del pedido son incorrectos")));
 			return res;
-			
+
 		}
 		return res;
 	}

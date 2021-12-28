@@ -18,7 +18,6 @@ public class PedidoController extends BaseControllerImpl<Pedido, PedidoServiceIm
 
 	@GetMapping("obtenerPedidos")
 	public ResponseEntity<?> obtenerUsuarios() throws Exception {
-
 		 return ResponseEntity.status(HttpStatus.OK).body(service.obtenerPedidos());
 	
 	}
