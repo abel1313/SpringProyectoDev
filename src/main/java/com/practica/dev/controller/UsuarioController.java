@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.practica.dev.exception.ResourceNotFoundException;
 import com.practica.dev.model.Ejemplo;
 import com.practica.dev.model.Usuario;
 import com.practica.dev.service.EnvioCorreoService;
@@ -41,7 +42,8 @@ public class UsuarioController extends BaseControllerImpl<Usuario, UsuarioServic
 		 return ResponseEntity.status(HttpStatus.OK).body(this.iUsuarioService.iniciarSesion(usuario.getNombreUsuario(), usuario.getContrasenaUsuario()));
 		}catch( Exception e)
 		{
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{'error':'Error. Verificar'} ");
+			
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body( new ResourceNotFoundException(e.getMessage()) );
 		}
 	}
 	

@@ -38,7 +38,7 @@ import com.practica.dev.service.IPermisosService;
 import com.practica.dev.service.IPersonaService;
 
 @RestController
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+//@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 @RequestMapping("proyecto/clientes")
 public class ClienteController extends BaseControllerImpl<Cliente, IClienteServiceImpl> {
 	
@@ -165,7 +165,7 @@ public class ClienteController extends BaseControllerImpl<Cliente, IClienteServi
 	@GetMapping("/buscarId/{id}")
 	public ResponseEntity<?> buscarClienteId(@PathVariable Integer id) throws Exception {
 		// TODO Auto-generated method stub
-		
+		System.err.println(id+ " ////////////////////////////////////////////////////");
 		RespuestaDTO<Optional<Cliente>> respuesta = new RespuestaDTO<>();
 		
 		try {
@@ -174,7 +174,11 @@ public class ClienteController extends BaseControllerImpl<Cliente, IClienteServi
 				respuesta.setCode("200 OK");
 				respuesta.setCodeValue(200);
 				respuesta.setMensaje("Datos del cliente para editar");
-				Optional<Cliente> listaCliente = !this.iClienteService.getOne(id).isPresent() ? this.iClienteService.getOne(id) : Optional.empty() ;
+				
+				Optional<Cliente> listaCliente = this.iClienteService.getOne(id).isPresent() ? this.iClienteService.getOne(id) : Optional.empty() ;
+
+				System.err.println(" ---------------------------------------------------------------------- ");
+				System.err.println(listaCliente );
 				respuesta.setT(listaCliente);
 		
 				 return ResponseEntity.status(HttpStatus.OK).body(respuesta);

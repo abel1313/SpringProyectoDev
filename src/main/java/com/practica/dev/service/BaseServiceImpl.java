@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.practica.dev.dto.RespuestaDTO;
+import com.practica.dev.exception.ResourceNotFoundException;
 import com.practica.dev.model.Base;
 import com.practica.dev.model.Persona;
 import com.practica.dev.repository.IBaseRepository;
@@ -28,7 +29,8 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 			return this.iBaseRepository.findAll();
 		}catch(Exception e)
 		{
-			throw new Exception(e.getMessage());
+			 throw new ResourceNotFoundException(e.getMessage());
+//			throw new Exception(e.getMessage());
 		}
 	}
 
@@ -42,7 +44,9 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 			return entityUpdate;
 		}catch(Exception exception)
 		{
-			throw new Exception(exception.getMessage());
+
+			 throw new ResourceNotFoundException(exception.getMessage());
+//			throw new Exception(exception.getMessage());
 		}
 	}
 	@Override
@@ -52,7 +56,9 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
 			return this.iBaseRepository.save(e);
 		}catch(Exception exception)
 		{
-			throw new Exception(exception.getMessage());
+
+			 throw new ResourceNotFoundException(exception.getMessage());
+//			throw new Exception(exception.getMessage());
 		}
 	}
 

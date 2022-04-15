@@ -1,4 +1,4 @@
-package com.practica.dev.dto;
+package com.practica.dev.model;
 
 import javax.persistence.Entity;
 
@@ -14,10 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RespuestaDTO <T>
-{
-	private String code;
-	private Integer codeValue;
-	private String mensaje;
-	private T t;	
+public class Base64 {
+
+	private String base64;
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.practica.dev.dto.RespuestaDTO;
+import com.practica.dev.exception.ResourceNotFoundException;
 import com.practica.dev.model.Usuario;
 import com.practica.dev.model.Vistas;
 import com.practica.dev.repository.IBaseRepository;
@@ -44,12 +45,16 @@ implements IVistaService{
 			return vistaDTO;
 		}catch(Exception exception)
 		{
-			 Exception exe = new Exception(exception.getMessage());
+			
+			 throw new ResourceNotFoundException(exception.getMessage());
+		/**
+		 * 	 Exception exe = new Exception(exception.getMessage());
 			vistaDTO.setCode("200 OK");
 			vistaDTO.setCodeValue(500);
 			vistaDTO.setMensaje("No existen vistas "+exe.getMessage());
 			vistaDTO.setT(Optional.empty());
 			return vistaDTO;
+		 * */
 		}
 	}
 	

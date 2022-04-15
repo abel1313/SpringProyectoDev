@@ -34,8 +34,6 @@ implements IClienteService {
 		RespuestaDTO<Stream<MostrarClienteDTO>> respuesta = new RespuestaDTO<>();
 		try {
 			
-
-			
 			List<Cliente> clientes = this.iClienteRepository.findAll();
 			if( !clientes.isEmpty() )
 			{
